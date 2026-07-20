@@ -4,7 +4,7 @@ module.exports = defineConfig({
   allowCypressEnv: false,
 
   e2e: {
-    baseUrl: "https://playground.bondaracademy.com/pages/tables/smart-table",
+    baseUrl: "https://playground.bondaracademy.com",
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
