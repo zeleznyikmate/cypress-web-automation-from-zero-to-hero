@@ -1,0 +1,23 @@
+{
+  "name": "cypress-web-automation-from-zero-to-hero",
+  "version": "1.0.0",
+  "description": "This repository contains my hands-on exercises, framework architectures, and automated end-to-end (E2E) UI tests developed while taking the Udemy course: **[Cypress: Web Automation Testing from Zero to Hero](https://www.udemy.com/course/cypress-web-automation-testing-from-zero-to-hero/)**.",
+  "homepage": "https://github.com/zeleznyikmate/cypress-web-automation-from-zero-to-hero#readme",
+  "bugs": {
+    "url": "https://github.com/zeleznyikmate/cypress-web-automation-from-zero-to-hero/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeleznyikmate/cypress-web-automation-from-zero-to-hero.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "cypress-iframe": "^1.0.1"
+  }
+}
