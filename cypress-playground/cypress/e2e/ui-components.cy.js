@@ -177,7 +177,7 @@ it('drag&drop', () => {
     cy.get('#drop-list').trigger('drop')
 }) 
 
-it.only('iframes', () => {    
+it('iframes', () => {    
     cy.contains('Modal & Overlays').click()
     cy.contains('Dialog').click()
     cy.frameLoaded('[data-cy="esc-close-iframe"]')
