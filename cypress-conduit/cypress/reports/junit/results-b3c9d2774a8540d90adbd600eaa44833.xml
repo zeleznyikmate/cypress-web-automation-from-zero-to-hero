@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="9.265" tests="5" failures="0">
+  <testsuite name="Root Suite" timestamp="2026-07-26T16:11:01" tests="5" file="cypress\e2e\workingWithAPIs.cy.js" time="9.265" failures="0">
+    <testcase name="first test" time="1.356" classname="first test">
+    </testcase>
+    <testcase name="modify api response" time="0.006" classname="modify api response">
+    </testcase>
+    <testcase name="waiting for apis" time="1.397" classname="waiting for apis">
+    </testcase>
+    <testcase name="delete article" time="2.956" classname="delete article">
+    </testcase>
+    <testcase name="api testing" time="1.529" classname="api testing">
+    </testcase>
+  </testsuite>
+</testsuites>

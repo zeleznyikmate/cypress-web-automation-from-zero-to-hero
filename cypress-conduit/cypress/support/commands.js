@@ -26,22 +26,36 @@
 
 Cypress.Commands.add('loginToApplication', () => {
       cy.request({
-        url: 'https://conduit-api.bondaracademy.com/api/users/login',
+        url: Cypress.env('apiUrl')+'/users/login',
         method: 'POST',
         body: {
             "user": {
-            "email": "zeleznyik.mate@gmail.com",
-            "password": "q4l-al0!"
+            "email": Cypress.env('username'),
+            "password": Cypress.env('password')
             }
         }
     }).then(response =>{
         expect(response.status).to.equal(200)
         const accessToken = response.body.user.token
         cy.wrap(accessToken).as('accessToken')
-        cy.visit('/'), {
+        cy.visit('/', {
             onBeforeLoad(win){
                 win.localStorage.setItem('jwtToken', accessToken)
             }
-        }
+        })
     })
+})
+
+Cypress.Commands.add('uiLogin', () => {
+    cy.session('user', () =>{
+        cy.visit('/')
+        cy.contains('Sign in').click()
+        cy.get('[placeholder="Email"]').type(Cypress.env('username'))
+        cy.get('[placeholder="Password"]').type(Cypress.env('password'))
+        cy.contains('button', 'Sign in').click()
+        cy.location('pathname').should('eq', '/')
+    }, {
+        cacheAcrossSpecs: true
+    })
+    cy.visit('/')
 })

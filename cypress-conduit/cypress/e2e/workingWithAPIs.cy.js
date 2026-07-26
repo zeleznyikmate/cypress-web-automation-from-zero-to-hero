@@ -1,13 +1,14 @@
 /// <reference types="cypress" />
+import { faker } from '@faker-js/faker';
 
-it('first test', ()=>{
+it('first test', {tags: '@smoke'}, ()=>{
     cy.intercept('GET', '**/tags', {fixture: 'tags.json'})
     cy.intercept({method: 'GET', pathname: 'tags'}, {fixture: 'tags.json'})
     cy.intercept('GET', '**/articles*', {fixture: 'articles.json'})
     cy.loginToApplication()
 })
 
-it('modify api response', ()=>{
+it('modify api response', {retries: 2, tags: ['@smoke', '@likes']}, ()=>{
     cy.intercept('GET', '**/articles*', req =>{
         req.continue( res =>{
             res.body.articles[0].favoritesCount = 9999999
@@ -17,6 +18,7 @@ it('modify api response', ()=>{
     cy.loginToApplication()
     cy.get('app-favorite-button').first().should('contain.text', '9999999')
 })
+
 
 it('waiting for apis', ()=>{
     cy.intercept('GET', '**/articles*').as('articleApiCall')
@@ -30,38 +32,39 @@ it('waiting for apis', ()=>{
     })
 })
 
-it.only('delete article', ()=>{
-    cy.loginToApplication()
-    
+it('delete article', ()=>{ 
+    const titleOfTheArticle = faker.person.fullName()
+    cy.loginToApplication()  
+
     cy.get('@accessToken').then(accessToken => {
         cy.request({
-            url:'https://conduit-api.bondaracademy.com/api/articles/',
+            url: Cypress.env('apiUrl')+'/articles/',
             method: 'POST',
             body: {
                 "article": {
-                    "title": "Test title Cypress",
-                    "description": "Some description",
-                    "body": "This is a body",
+                    "title": titleOfTheArticle,
+                    "description": faker.person.jobTitle(),
+                    "body": faker.lorem.paragraph(10),
                     "tagList": []
                 }
             },
             headers: {'Authorization': 'Token '+accessToken}
         }).then( response =>{
             expect(response.status).to.equal(201)
-            expect(response.body.article.title).to.equal('Test title Cypress')
+            expect(response.body.article.title).to.equal(titleOfTheArticle)
         })
     })
-    
-    cy.contains('Test title Cypress').click()
+
+    cy.contains(titleOfTheArticle).click()
     cy.intercept('GET', '**/articles*').as('articleApiCall')
     cy.contains('button', 'Delete Article').first().click()
     cy.wait('@articleApiCall')
-    cy.get('app-article-list').should('not.contain.text', 'Test title Cypress')
+    cy.get('app-article-list').should('not.contain.text', titleOfTheArticle)
 })
 
 it('api testing', () => {
     cy.request({
-        url: 'https://conduit-api.bondaracademy.com/api/users/login',
+        url: Cypress.env('apiUrl')+'/users/login',
         method: 'POST',
         body: {
             "user": {
@@ -74,7 +77,7 @@ it('api testing', () => {
         const accessToken = 'Token ' + response.body.user.token
 
         cy.request({
-            url: 'https://conduit-api.bondaracademy.com/api/articles/',
+            url: Cypress.env('apiUrl')+'/articles/',
             method: 'POST',
             body: {
                 "article": {
@@ -91,7 +94,7 @@ it('api testing', () => {
         })
 
         cy.request({
-            url: 'https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0',
+            url: Cypress.env('apiUrl')+'/articles?limit=10&offset=0',
             method: 'GET',
             headers: {'Authorization': accessToken}
         }).then( response => {
@@ -100,7 +103,7 @@ it('api testing', () => {
             const slugID = response.body.articles[0].slug
 
             cy.request({
-                url: `https://conduit-api.bondaracademy.com/api/articles/${slugID}`,
+                url: Cypress.env('apiUrl')+`/articles/${slugID}`,
                 method: 'DELETE',
                 headers: {'Authorization': accessToken}
             }).then(response => {
@@ -109,7 +112,7 @@ it('api testing', () => {
         })
 
         cy.request({
-            url: 'https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0',
+            url: Cypress.env('apiUrl')+'/articles?limit=10&offset=0',
             method: 'GET',
             headers: {'Authorization': accessToken}
         }).then(response => {
